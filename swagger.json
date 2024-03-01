@@ -1,0 +1,178 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "All Books API",
+      "version": "1.0.0",
+      "description": "API para buscar libros"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:4500/",
+        "description": "Servidor de desarrollo"
+      }
+    ],
+    "paths": {
+      "/allbooks": {
+        "get": {
+          "summary": "Lista todos los libros",
+          "responses": {
+            "200": {
+              "description": "Operación exitosa",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean"
+                      },
+                      "projects": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/Project"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/allbooks/genre/{genre}": {
+        "get": {
+          "summary": "Filtra los libros por género",
+          "responses": {
+            "200": {
+              "description": "Operación exitosa",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean"
+                      },
+                      "books": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/components/schemas/Project"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/allbooks": {
+        "post": {
+          "summary": "Añadir nuevo libro ",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewProject"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Libro añadido correctamente"
+            }
+          }
+        },
+        "put": {
+          "summary": "Modificar un libro existente",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewProject"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Libro actualizado correctamente"
+            }
+          }
+        },
+        "delete": {
+          "summary": "Eliminar un libro existente",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewProject"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Libro eliminado correctamente"
+            },
+            "404": {
+              "description": "No hay nada que eliminar"
+            }
+          }
+        }
+      },
+      "/allbooks/{id}": {
+        "get": {
+          "summary": "Obtiene detalles de un libro en concreto",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Operación exitosa"
+            },
+            "404": {
+              "description": "No hay ningún libro con ese id"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "Project": {
+          "type": "object",
+          "properties": {
+            "idProject": {
+              "type": "integer"
+            }
+          }
+        },
+        "NewProject": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+  
