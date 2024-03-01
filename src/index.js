@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2/promise");
+const bcrypt = require('bcrypt');
 require("dotenv").config(); 
 
 
@@ -136,6 +137,25 @@ server.get("/allbooks/genre/:genre", async (req, res) => {
     const filterSql = "select * from AllBooks where genre = ?";
     const [results] = await conex.query(filterSql, [genreFilter]);
     res.json({ success: true, books: results })
+});
+
+
+// registro // 
+
+server.post('/registro', async (req, res) => {
+    const { email, nombre, direccion, password } = req.body;
+    const conex = await connectBD();
+    const findUser = "select * from usuarios_db where email = ?";
+    const [resultUser] = await conex.query(findUser, [email]);
+
+    if (resultUser.length === 0) {
+        const passHashed = await bcrypt.hash(password, 10);
+        const newUserSql = "insert into usuarios_db (email, nombre, dirección, password) values (?, ?, ?, ?)";
+        const [insertUser] = await conex.query(newUserSql, [email, nombre, direccion, passHashed]);
+        res.json({ success: true, userId: insertUser.insertId });
+    } else {
+        res.json({ success: false, error: "El usuario ya existe" });
+    }
 });
 
 
