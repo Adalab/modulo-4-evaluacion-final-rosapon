@@ -9,7 +9,7 @@ Para llevarlo acabo he creado una base de datos SQL de libros (título, autor, g
 <b>/allbooks (POST)</b>: para añadir un nuevo libro a la lista. <br>
 <b>/allbooks/: id (PUT)</b>: para modificar un libro en concreto. <br>
 <b>/allbooks(DELETE)</b> : para eliminar un libro de la base de datos.<br>
-<b>/allbooks/genre/:genre<(GET)</b> : para filtrar los libros por género. 
+<b>/allbooks/genre/:genre (GET)</b> : para filtrar los libros por género. 
 
 <b>///// sign-in & log-in /////</b>
 
