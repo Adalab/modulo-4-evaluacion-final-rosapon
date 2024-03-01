@@ -31,6 +31,12 @@ server.listen(port, ()=> {
 });
 
 
+// endpoints //
+
+
+
+// mostrar todos los libros //
+
 server.get('/allbooks', async(req, res)=> {
     const conex = await connectBD();
     const booksSQL = "select * from AllBooks";
@@ -41,6 +47,8 @@ server.get('/allbooks', async(req, res)=> {
         books: result,
     });
 });
+
+// buscar por id en la url //
 
 server.get("/allbooks/:id", async (req, res)=> {
     const idBook = req.params.id; 
@@ -61,6 +69,7 @@ server.get("/allbooks/:id", async (req, res)=> {
     res.json({ success: true, book: result[0] }); 
 });
 
+// añadir nuevo libro //
 
 server.post("/allbooks", async(req, res)=> {
     const data = req.body;
@@ -78,6 +87,8 @@ server.post("/allbooks", async(req, res)=> {
         id: result.id,
     });
 });
+
+// modificar un libro //
 
 server.put("/allbooks/:id", async (req, res) => {
     const conex = await connectBD();
@@ -99,6 +110,7 @@ server.put("/allbooks/:id", async (req, res) => {
     });
 });
 
+// borrar un libro // 
 
 server.delete("/allbooks", async (req, res) => {
     const conex = await connectBD();
@@ -116,9 +128,11 @@ server.delete("/allbooks", async (req, res) => {
     }
 });
 
-server.get("/allbooks/:genre", async (req, res) => {
+// filtrar por género // 
+
+server.get("/allbooks/genre/:genre", async (req, res) => {
     const conex = await connectBD();
-    const genreFilter = req.query.genre;
+    const genreFilter = req.params.genre;
     const filterSql = "select * from AllBooks where genre = ?";
     const [results] = await conex.query(filterSql, [genreFilter]);
     res.json({ success: true, books: results })
