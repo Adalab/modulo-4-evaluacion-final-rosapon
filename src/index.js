@@ -2,6 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2/promise");
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+
 require("dotenv").config(); 
 
 
@@ -24,6 +27,11 @@ async function connectBD() {
     conex.connect();
     return conex;
 }
+
+const generateToken = (data) => {
+    const token = jwt.sign(data, 'secretKey', { expiresIn: '1h' });
+    return token;
+  };
 
 connectBD();
 
@@ -157,6 +165,29 @@ server.post('/registro', async (req, res) => {
         res.json({ success: false, error: "El usuario ya existe" });
     }
 });
+
+// login // 
+
+server.post("/log-in", async (req, res) => {
+    const {email, password} = req.body;
+    const findUserSql = "select * from usuarios_db where email = ?";
+    const conex = await connectBD();
+
+    const [resultUser] = await conex.query(findUserSql, [email]);
+    if (resultUser.length !== 0) {
+        const checkPass = await bcrypt.compare(password, resultUser[0].password);
+
+        if(checkPass) {
+            const infoToken = {id: resultUser[0].id, email: resultUser[0].email}
+            const token = generateToken(infoToken);
+            res.json({ success: true, token: token, udUser: resultUser[0].id})
+        } else {
+            res.json ({success: false, message: "contraseña incorrecta"})
+        }
+    } else {
+        res.json({success: false, message: "El correo no existe"})
+    }
+})
 
 
 
